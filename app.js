@@ -83,6 +83,12 @@ function render() {
     const matchesText = task.title.toLocaleLowerCase("es").includes(query);
     const matchesStatus = selectedStatus === "all" || task.status === selectedStatus;
     return matchesText && matchesStatus;
+  })
+  .sort((a, b) => {
+    if (!a.dueDate && !b.dueDate) return 0;
+    if (!a.dueDate) return 1;
+    if (!b.dueDate) return -1;
+    return a.dueDate.localeCompare(b.dueDate);
   });
 
   document.querySelector("#total-count").textContent = tasks.length;
