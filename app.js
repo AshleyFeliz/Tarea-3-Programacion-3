@@ -76,6 +76,19 @@ function formatDate(value) {
   );
 }
 
+function isOverdue(task) {
+  if (task.status !== "pending" || !task.dueDate) return false;
+
+  const now = new Date();
+  const today = [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
+
+  return task.dueDate < today;
+}
+
 function render() {
   const query = searchInput.value.trim().toLocaleLowerCase("es");
   const selectedStatus = statusFilter.value;
@@ -105,6 +118,7 @@ function render() {
 
   taskList.innerHTML = visibleTasks.map((task) => {
     const completed = task.status === "completed";
+    const overdue = isOverdue(task);
     const statusLabel = completed ? "Completada" : "Pendiente";
     const dueDate = task.dueDate
       ? `<p class="task-date">Fecha límite: ${escapeHtml(formatDate(task.dueDate))}</p>`
@@ -115,6 +129,7 @@ function render() {
           <div class="task-title-row">
             <h3 class="task-title">${escapeHtml(task.title)}</h3>
             <span class="status-badge status-${completed ? "completed" : "pending"}">${statusLabel}</span>
+            ${overdue ? '<span class="status-badge status-overdue">Vencida</span>' : ""}
           </div>
           ${task.description ? `<p class="task-description">${escapeHtml(task.description)}</p>` : ""}
           ${dueDate}
