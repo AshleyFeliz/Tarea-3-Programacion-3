@@ -1,6 +1,7 @@
 "use strict";
 
 const STORAGE_KEY = "taskflow.tasks.v1";
+const PRIORITY_LABELS = { low: "Baja", medium: "Media", high: "Alta" };
 const form = document.querySelector("#task-form");
 const taskList = document.querySelector("#task-list");
 const emptyState = document.querySelector("#empty-state");
@@ -28,10 +29,13 @@ function loadTasks() {
       typeof task.title === "string" &&
       typeof task.description === "string" &&
       typeof task.dueDate === "string" &&
-      ["pending", "completed"].includes(task.status),
+      ["pending", "completed"].includes(task.status) &&
+      (task.priority === undefined || ["low", "medium", "high"].includes(task.priority)),
     );
     if (!validTasks) throw new Error("Una o más tareas tienen datos inválidos.");
-    return parsed;
+    return parsed.map((task) => task.priority === undefined
+      ? { ...task, priority: "medium" }
+      : task);
   } catch (error) {
     showNotice(`No se pudieron leer las tareas guardadas: ${error.message}`);
     return [];
@@ -133,6 +137,7 @@ function render() {
             <h3 class="task-title">${escapeHtml(task.title)}</h3>
             <span class="status-badge status-${completed ? "completed" : "pending"}">${statusLabel}</span>
             ${overdue ? '<span class="status-badge status-overdue">Vencida</span>' : ""}
+            <span class="priority-badge priority-${task.priority}">Prioridad ${PRIORITY_LABELS[task.priority]}</span>
           </div>
           ${task.description ? `<p class="task-description">${escapeHtml(task.description)}</p>` : ""}
           ${dueDate}
@@ -175,6 +180,7 @@ form.addEventListener("submit", (event) => {
     description: formData.get("description").trim(),
     dueDate: formData.get("dueDate"),
     status: formData.get("status"),
+    priority: formData.get("priority"),
     createdAt: existing ? existing.createdAt : new Date().toISOString(),
   };
   const nextTasks = existing
@@ -253,6 +259,7 @@ taskList.addEventListener("click", (event) => {
     form.elements.description.value = task.description;
     form.elements.dueDate.value = task.dueDate;
     form.elements.status.value = task.status;
+    form.elements.priority.value = task.priority;
     formHeading.textContent = "Editar tarea";
     submitButton.textContent = "Guardar cambios";
     cancelEditButton.hidden = false;
