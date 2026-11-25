@@ -7,6 +7,7 @@ const emptyState = document.querySelector("#empty-state");
 const notice = document.querySelector("#notice");
 const searchInput = document.querySelector("#search");
 const statusFilter = document.querySelector("#filter-status");
+const exportTasksButton = document.querySelector("#export-tasks");
 const clearCompletedButton = document.querySelector("#clear-completed");
 const cancelEditButton = document.querySelector("#cancel-edit");
 const submitButton = document.querySelector("#submit-button");
@@ -193,6 +194,28 @@ form.elements.title.addEventListener("input", () => {
 cancelEditButton.addEventListener("click", resetForm);
 searchInput.addEventListener("input", render);
 statusFilter.addEventListener("change", render);
+
+exportTasksButton.addEventListener("click", () => {
+  let downloadUrl = "";
+  let link;
+  try {
+    const file = new Blob([JSON.stringify(tasks, null, 2)], {
+      type: "application/json",
+    });
+    downloadUrl = URL.createObjectURL(file);
+    link = document.createElement("a");
+    link.href = downloadUrl;
+    link.download = "taskflow-tareas.json";
+    document.body.appendChild(link);
+    link.click();
+    clearNotice();
+  } catch (error) {
+    showNotice(`No se pudo exportar el archivo: ${error.message}`);
+  } finally {
+    if (link && link.parentNode) link.parentNode.removeChild(link);
+    if (downloadUrl) window.setTimeout(() => URL.revokeObjectURL(downloadUrl), 1000);
+  }
+});
 
 clearCompletedButton.addEventListener("click", () => {
   const completedTasks = tasks.filter((task) => task.status === "completed");
