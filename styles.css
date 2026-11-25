@@ -73,6 +73,10 @@ input:focus, textarea:focus, select:focus { border-color: #8391f2; box-shadow: 0
 .status-pending { color: #9a6a13; background: #fff4d9; }
 .status-completed { color: #21815d; background: #e3f6ed; }
 .status-overdue { color: #b42332; background: #ffe5e8; }
+.priority-badge { padding: 4px 8px; border-radius: 20px; font-size: .68rem; font-weight: 700; }
+.priority-low { color: #526579; background: #edf2f7; }
+.priority-medium { color: #875b11; background: #fff1d2; }
+.priority-high { color: #a62f3d; background: #ffe5e8; }
 .task-actions { display: flex; flex-shrink: 0; align-items: flex-start; gap: 5px; }
 .icon-button { min-width: 34px; min-height: 34px; border: 0; border-radius: 8px; color: #69758b; background: #f4f6fa; cursor: pointer; font-size: .76rem; font-weight: 600; }
 .icon-button:hover { color: var(--accent-dark); background: #edf0ff; }
