@@ -52,12 +52,14 @@ input:focus, textarea:focus, select:focus { border-color: #8391f2; box-shadow: 0
 .form-actions { display: flex; gap: 9px; margin-top: 21px; }
 .button { min-height: 42px; padding: 0 16px; border: 0; border-radius: 9px; cursor: pointer; font-size: .86rem; font-weight: 700; transition: background .15s, transform .15s; }
 .button:hover { transform: translateY(-1px); }
+.button:disabled, .button:disabled:hover { cursor: not-allowed; opacity: .55; transform: none; }
 .button-primary { color: white; background: var(--accent); }
 .button-primary:hover { background: var(--accent-dark); }
 .button-secondary { color: #58647a; background: #eef1f7; }
 
 .list-panel { min-height: 300px; }
 .list-heading { margin-bottom: 18px; }
+.list-heading-actions { display: flex; align-items: center; gap: 10px; }
 .visible-count { color: var(--muted); font-size: .78rem; }
 .filters { display: grid; grid-template-columns: 1fr 190px; gap: 10px; margin-bottom: 16px; }
 .task-list { display: grid; gap: 10px; }
@@ -91,6 +93,7 @@ footer { padding: 20px 0 0; color: #98a1af; text-align: center; font-size: .76re
   .summary-card { align-items: flex-start; min-height: 75px; flex-direction: column; gap: 6px; padding: 13px; }
   .summary-label { font-size: .75rem; }
   .panel { padding: 19px; }
+  .list-heading-actions { align-items: flex-end; flex-direction: column; gap: 6px; }
   .filters { grid-template-columns: 1fr; }
   .task-card { gap: 8px; padding: 13px; }
   .task-actions { flex-direction: column; }

@@ -7,6 +7,7 @@ const emptyState = document.querySelector("#empty-state");
 const notice = document.querySelector("#notice");
 const searchInput = document.querySelector("#search");
 const statusFilter = document.querySelector("#filter-status");
+const clearCompletedButton = document.querySelector("#clear-completed");
 const cancelEditButton = document.querySelector("#cancel-edit");
 const submitButton = document.querySelector("#submit-button");
 const formHeading = document.querySelector("#form-heading");
@@ -109,6 +110,7 @@ function render() {
     tasks.filter((task) => task.status === "pending").length;
   document.querySelector("#completed-count").textContent =
     tasks.filter((task) => task.status === "completed").length;
+  clearCompletedButton.disabled = !tasks.some((task) => task.status === "completed");
   document.querySelector("#visible-count").textContent =
     `${visibleTasks.length} ${visibleTasks.length === 1 ? "tarea" : "tareas"}`;
   emptyState.hidden = visibleTasks.length > 0;
@@ -191,6 +193,20 @@ form.elements.title.addEventListener("input", () => {
 cancelEditButton.addEventListener("click", resetForm);
 searchInput.addEventListener("input", render);
 statusFilter.addEventListener("change", render);
+
+clearCompletedButton.addEventListener("click", () => {
+  const completedTasks = tasks.filter((task) => task.status === "completed");
+  if (completedTasks.length === 0) return;
+
+  const taskCount = completedTasks.length;
+  const label = taskCount === 1 ? "tarea completada" : "tareas completadas";
+  if (!window.confirm(`¿Eliminar ${taskCount} ${label}?`)) return;
+
+  if (saveTasks(tasks.filter((task) => task.status !== "completed"))) {
+    if (completedTasks.some((task) => task.id === editingId)) resetForm();
+    render();
+  }
+});
 
 taskList.addEventListener("click", (event) => {
   const button = event.target.closest("button[data-action]");
